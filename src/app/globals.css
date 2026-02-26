@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f9f4;
+  --foreground: #2d4a3e;
+  --spring-bg: #f5f9f4;
+  --spring-card: #ffffff;
+  --spring-input: #f0f7f0;
+  --spring-text: #2d4a3e;
+  --spring-soft: #5a7a6a;
+  --spring-muted: #7a9a8a;
+  --spring-sage-500: #7cb342;
+  --spring-sage-600: #689f38;
+  --spring-sage-700: #558b2f;
+  --spring-blossom-500: #ce93d8;
+  --spring-border: #c5e1a5;
+  --spring-hover: #e8f5e9;
+  --spring-danger: #e57373;
+  --spring-shadow: 0 4px 20px rgba(124, 179, 66, 0.08);
+  --spring-shadow-lg: 0 12px 40px rgba(124, 179, 66, 0.12);
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-spring-bg: var(--spring-bg);
+  --color-spring-card: var(--spring-card);
+  --color-spring-input: var(--spring-input);
+  --color-spring-text: var(--spring-text);
+  --color-spring-soft: var(--spring-soft);
+  --color-spring-muted: var(--spring-muted);
+  --color-spring-sage-500: var(--spring-sage-500);
+  --color-spring-sage-600: var(--spring-sage-600);
+  --color-spring-sage-700: var(--spring-sage-700);
+  --color-spring-blossom-500: var(--spring-blossom-500);
+  --color-spring-border: var(--spring-border);
+  --color-spring-hover: var(--spring-hover);
+  --color-spring-danger: var(--spring-danger);
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+  --shadow-spring: var(--spring-shadow);
+  --shadow-spring-lg: var(--spring-shadow-lg);
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(
+    180deg,
+    #f5f9f4 0%,
+    #f0f5ed 50%,
+    #fafdf8 100%
+  );
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease;
 }
