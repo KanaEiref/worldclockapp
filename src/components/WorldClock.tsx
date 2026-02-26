@@ -14,7 +14,7 @@ import {
 } from "@/lib/utils";
 import AnalogClock from "./AnalogClock";
 
-const MAX_CITIES = 5;
+const MAX_CITIES = 10;
 const STORAGE_KEY = "worldclock-cities";
 
 function detectLocalCity(): string {
@@ -190,7 +190,7 @@ export default function WorldClock() {
             <h2 className="text-lg font-semibold text-spring-text">
               World Clocks{" "}
               <span className="text-xs font-normal text-spring-muted">
-                (Max 5 cities)
+                (Max 10 cities)
               </span>
             </h2>
             <span className="text-sm font-medium text-spring-muted">
@@ -214,7 +214,7 @@ export default function WorldClock() {
               }}
               placeholder={
                 selectedCities.length >= MAX_CITIES
-                  ? "Maximum 5 cities reached"
+                  ? "Maximum 10 cities reached"
                   : "Search for a city..."
               }
               disabled={selectedCities.length >= MAX_CITIES}
@@ -225,14 +225,14 @@ export default function WorldClock() {
             {dropdownOpen && (
               <div
                 ref={dropdownRef}
-                className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border border-spring-border bg-spring-card shadow-spring-lg"
+                className="absolute left-0 right-0 top-full z-50 mt-1 max-h-80 overflow-y-auto rounded-lg border border-spring-border bg-spring-card shadow-spring-lg"
               >
                 {searchResults.length === 0 ? (
                   <div className="flex justify-center py-4 text-sm text-spring-muted">
                     No cities found
                   </div>
                 ) : (
-                  searchResults.slice(0, 20).map((city) => (
+                  searchResults.slice(0, 30).map((city) => (
                     <button
                       key={`${city.name}-${city.timezone}`}
                       type="button"
@@ -258,7 +258,7 @@ export default function WorldClock() {
           <div className="flex flex-col gap-3">
             {selectedCities.length === 0 ? (
               <div className="py-12 text-center text-sm text-spring-muted">
-                No cities added yet. Search above to add up to 5 cities.
+                No cities added yet. Search above to add up to 10 cities.
               </div>
             ) : (
               selectedCities.map((city) => (
