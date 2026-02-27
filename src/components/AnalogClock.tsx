@@ -26,6 +26,9 @@ export default function AnalogClock({
   const cy = size / 2;
   const r = size / 2 - 4;
 
+  // Round to avoid hydration mismatch from floating point differences across environments
+  const round = (n: number) => Math.round(n * 1e6) / 1e6;
+
   return (
     <svg
       width={size}
@@ -35,9 +38,9 @@ export default function AnalogClock({
     >
       {/* Clock face circle */}
       <circle
-        cx={cx}
-        cy={cy}
-        r={r}
+        cx={round(cx)}
+        cy={round(cy)}
+        r={round(r)}
         fill="none"
         stroke="currentColor"
         strokeWidth={2}
@@ -48,10 +51,10 @@ export default function AnalogClock({
         const angle = (i * 30 - 90) * (Math.PI / 180);
         const innerR = r - 6;
         const outerR = r;
-        const x1 = cx + innerR * Math.cos(angle);
-        const y1 = cy + innerR * Math.sin(angle);
-        const x2 = cx + outerR * Math.cos(angle);
-        const y2 = cy + outerR * Math.sin(angle);
+        const x1 = round(cx + innerR * Math.cos(angle));
+        const y1 = round(cy + innerR * Math.sin(angle));
+        const x2 = round(cx + outerR * Math.cos(angle));
+        const y2 = round(cy + outerR * Math.sin(angle));
         return (
           <line
             key={i}
@@ -67,10 +70,10 @@ export default function AnalogClock({
       })}
       {/* Hour hand */}
       <line
-        x1={cx}
-        y1={cy}
-        x2={cx + (r * 0.4) * Math.cos((hourDeg - 90) * (Math.PI / 180))}
-        y2={cy + (r * 0.4) * Math.sin((hourDeg - 90) * (Math.PI / 180))}
+        x1={round(cx)}
+        y1={round(cy)}
+        x2={round(cx + (r * 0.4) * Math.cos((hourDeg - 90) * (Math.PI / 180)))}
+        y2={round(cy + (r * 0.4) * Math.sin((hourDeg - 90) * (Math.PI / 180)))}
         stroke="currentColor"
         strokeWidth={2.5}
         strokeLinecap="round"
@@ -78,10 +81,10 @@ export default function AnalogClock({
       />
       {/* Minute hand */}
       <line
-        x1={cx}
-        y1={cy}
-        x2={cx + (r * 0.6) * Math.cos((minuteDeg - 90) * (Math.PI / 180))}
-        y2={cy + (r * 0.6) * Math.sin((minuteDeg - 90) * (Math.PI / 180))}
+        x1={round(cx)}
+        y1={round(cy)}
+        x2={round(cx + (r * 0.6) * Math.cos((minuteDeg - 90) * (Math.PI / 180)))}
+        y2={round(cy + (r * 0.6) * Math.sin((minuteDeg - 90) * (Math.PI / 180)))}
         stroke="currentColor"
         strokeWidth={2}
         strokeLinecap="round"
@@ -89,17 +92,17 @@ export default function AnalogClock({
       />
       {/* Second hand */}
       <line
-        x1={cx}
-        y1={cy}
-        x2={cx + (r * 0.7) * Math.cos((secondDeg - 90) * (Math.PI / 180))}
-        y2={cy + (r * 0.7) * Math.sin((secondDeg - 90) * (Math.PI / 180))}
+        x1={round(cx)}
+        y1={round(cy)}
+        x2={round(cx + (r * 0.7) * Math.cos((secondDeg - 90) * (Math.PI / 180)))}
+        y2={round(cy + (r * 0.7) * Math.sin((secondDeg - 90) * (Math.PI / 180)))}
         stroke="currentColor"
         strokeWidth={1}
         strokeLinecap="round"
         className="text-spring-sage-600"
       />
       {/* Center dot */}
-      <circle cx={cx} cy={cy} r={2} fill="currentColor" className="text-spring-sage-600" />
+      <circle cx={round(cx)} cy={round(cy)} r={2} fill="currentColor" className="text-spring-sage-600" />
     </svg>
   );
 }

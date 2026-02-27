@@ -68,9 +68,13 @@ function filterCities(
     .map((r) => r.city);
 }
 
+// Fixed date + UTC for SSR/hydration - ensures server and client render identical output
+const PLACEHOLDER_DATE = new Date(Date.UTC(2000, 0, 1, 12, 0, 0));
+
 export default function WorldClock() {
   const [selectedCities, setSelectedCities] = useState<City[]>([]);
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState<Date>(PLACEHOLDER_DATE);
+  const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [localCity, setLocalCity] = useState("Your Location");
@@ -80,6 +84,7 @@ export default function WorldClock() {
   const localTz = getLocalTimezone();
 
   useEffect(() => {
+    setMounted(true);
     setLocalCity(detectLocalCity());
   }, []);
 
@@ -100,9 +105,11 @@ export default function WorldClock() {
   }, [selectedCities]);
 
   useEffect(() => {
+    if (!mounted) return;
+    setTime(new Date());
     const id = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [mounted]);
 
   const addCity = useCallback((city: City) => {
     setSelectedCities((prev) => {
@@ -167,14 +174,18 @@ export default function WorldClock() {
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-6">
-              <AnalogClock date={time} timezone={localTz} size={100} />
+              <AnalogClock
+                date={time}
+                timezone={mounted ? localTz : "UTC"}
+                size={100}
+              />
               <div>
                 <div className="flex flex-wrap items-baseline gap-4">
                   <span className="font-mono text-3xl font-medium text-spring-text md:text-4xl">
-                    {formatTime(time, localTz)}
+                    {formatTime(time, mounted ? localTz : "UTC")}
                   </span>
                   <span className="text-sm text-spring-soft">
-                    {formatDate(time, localTz)}
+                    {formatDate(time, mounted ? localTz : "UTC")}
                   </span>
                 </div>
                 <div className="mt-2 font-mono text-xs text-spring-muted">
