@@ -17,6 +17,16 @@ import AnalogClock from "./AnalogClock";
 const MAX_CITIES = 10;
 const STORAGE_KEY = "worldclock-cities";
 
+// Important cities to show when search is focused (before typing)
+const SUGGESTED_CITIES: City[] = [
+  { name: "Nanjing", state: "Jiangsu", country: "China", timezone: "Asia/Shanghai" },
+  { name: "Beijing", state: "Beijing", country: "China", timezone: "Asia/Shanghai" },
+  { name: "Shanghai", state: "Shanghai", country: "China", timezone: "Asia/Shanghai" },
+  { name: "Tokyo", state: "", country: "Japan", timezone: "Asia/Tokyo" },
+  { name: "London", state: "", country: "UK", timezone: "Europe/London" },
+  { name: "New York", state: "", country: "USA", timezone: "America/New_York" },
+];
+
 function detectLocalCity(): string {
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -60,6 +70,8 @@ function filterCities(
       tokens.forEach((t) => {
         if (c.name.toLowerCase().startsWith(t)) score += 10;
       });
+      // Boost suggested/important cities so they appear first when they match
+      if (SUGGESTED_CITIES.some((s) => s.name === c.name && s.timezone === c.timezone)) score += 200;
 
       return { city: c, score };
     })
@@ -220,9 +232,7 @@ export default function WorldClock() {
                 setSearchQuery(e.target.value);
                 setDropdownOpen(e.target.value.trim().length > 0);
               }}
-              onFocus={() => {
-                if (searchQuery.trim().length > 0) setDropdownOpen(true);
-              }}
+              onFocus={() => setDropdownOpen(true)}
               placeholder={
                 selectedCities.length >= MAX_CITIES
                   ? "Maximum 10 cities reached"
@@ -238,7 +248,34 @@ export default function WorldClock() {
                 ref={dropdownRef}
                 className="absolute left-0 right-0 top-full z-50 mt-1 max-h-80 overflow-y-auto rounded-lg border border-spring-border bg-spring-card shadow-spring-lg"
               >
-                {searchResults.length === 0 ? (
+                {searchQuery.trim().length === 0 ? (
+                  <>
+                    <div className="border-b border-spring-border px-3 py-2 text-xs font-medium text-spring-muted">
+                      Popular cities
+                    </div>
+                    {SUGGESTED_CITIES.filter(
+                      (c) =>
+                        !selectedCities.some(
+                          (s) =>
+                            s.timezone === c.timezone && s.name === c.name
+                        )
+                    ).map((city) => (
+                      <button
+                        key={`${city.name}-${city.timezone}`}
+                        type="button"
+                        onClick={() => addCity(city)}
+                        className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left transition-colors hover:bg-spring-hover"
+                      >
+                        <span className="min-w-0 flex-1 truncate">
+                          {cityLabel(city)}
+                        </span>
+                        <span className="shrink-0 font-mono text-xs text-spring-muted">
+                          {getUTCOffset(city.timezone)}
+                        </span>
+                      </button>
+                    ))}
+                  </>
+                ) : searchResults.length === 0 ? (
                   <div className="flex justify-center py-4 text-sm text-spring-muted">
                     No cities found
                   </div>
