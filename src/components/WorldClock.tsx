@@ -351,6 +351,10 @@ export default function WorldClock() {
             )}
           </div>
         </section>
+
+        <footer className="mt-auto pt-10 pb-6 text-center text-xs text-spring-muted">
+          © 2026 controlled chaos design studio
+        </footer>
       </div>
     </div>
   );
